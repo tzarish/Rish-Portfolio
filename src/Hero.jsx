@@ -1,11 +1,31 @@
 import { useState, useEffect } from 'react';
-import './App.css';
+import BlobCursor from './BlobCursor';
 
 function App() {
   return (
-    <NewspaperBackground>
-      <LandingPage />
-    </NewspaperBackground>
+    <>
+      <BlobCursor
+        blobType="circle"
+        fillColor="#78350f"
+        trailCount={3}
+        sizes={[60, 125, 75]}
+        innerSizes={[20, 35, 25]}
+        innerColor="rgba(251, 191, 36, 0.8)"
+        opacities={[0.3, 0.3, 0.3]}
+        shadowColor="rgba(120, 53, 15, 0.5)"
+        shadowBlur={5}
+        shadowOffsetX={5}
+        shadowOffsetY={5}
+        filterStdDeviation={30}
+        useFilter={true}
+        fastDuration={0.1}
+        slowDuration={0.5}
+        zIndex={100}
+      />
+      <NewspaperBackground>
+        <LandingPage />
+      </NewspaperBackground>
+    </>
   );
 }
 
@@ -14,6 +34,7 @@ function LandingPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
+  const [fontLoaded, setFontLoaded] = useState(false);
   
   const textArray = [
     "Front-End Developer",
@@ -27,6 +48,26 @@ function LandingPage() {
   const pauseTime = 1500;
 
   useEffect(() => {
+    const checkFont = async () => {
+      try {
+        await document.fonts.load('1em chomsky');
+        setTimeout(() => {
+          setFontLoaded(true);
+        }, 100);
+      } catch (error) {
+        console.error('Font loading error:', error);
+        setTimeout(() => {
+          setFontLoaded(true);
+        }, 2000);
+      }
+    };
+
+    checkFont();
+  }, []);
+
+  useEffect(() => {
+    if (!fontLoaded) return;
+
     const handleTyping = () => {
       const current = loopNum % textArray.length;
       const fullText = textArray[current];
@@ -54,38 +95,62 @@ function LandingPage() {
     );
 
     return () => clearTimeout(timer);
-  }, [displayedText, isDeleting, loopNum]);
+  }, [displayedText, isDeleting, loopNum, fontLoaded]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center">
       <div className="max-w-4xl mx-auto">
-        <h1 className="cursor-default text-6xl md:text-7xl lg:text-8xl font-chomsky text-amber-950 mb-6 animate-fadeIn">
+        <h1 
+          className={`cursor-default text-6xl md:text-7xl lg:text-8xl font-chomsky text-amber-950 mb-6 transition-opacity duration-500 ${
+            fontLoaded ? 'opacity-100 animate-fadeIn' : 'opacity-0'
+          }`}
+        >
           Rishabh Rohira
         </h1>
 
-        <div className="h-12 mb-8">
+        <div 
+          className={`h-12 mb-8 transition-opacity duration-500 delay-300 ${
+            fontLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
           <p className="cursor-default text-2xl md:text-3xl font-serif text-amber-900">
             {displayedText}
             <span className="animate-blink">|</span>
           </p>
         </div>
 
-        <p className="cursor-default text-lg md:text-xl text-amber-800 font-serif leading-relaxed mb-12 max-w-2xl mx-auto">
+        <p 
+          className={`cursor-default text-lg md:text-xl text-amber-800 font-serif leading-relaxed mb-12 max-w-2xl mx-auto transition-opacity duration-500 delay-500 ${
+            fontLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
           Welcome to my corner of the web. I build beautiful, functional experiences 
           that blend creativity with code. Currently crafting digital solutions for
           my high school!
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center mb-12">
-          <button className="px-8 py-3 bg-amber-900 text-amber-50 font-serif text-lg rounded-lg hover:bg-amber-800 transition-all duration-300 shadow-lg hover:shadow-xl">
+          <button 
+            className={`px-8 py-3 bg-amber-900 text-amber-50 font-serif text-lg rounded-lg hover:bg-amber-800 transition-all duration-500 shadow-lg hover:shadow-xl ${
+              fontLoaded ? 'opacity-100 delay-700' : 'opacity-0'
+            }`}
+          >
             View Projects
           </button>
-          <button className="px-8 py-3 bg-transparent border-2 border-amber-900 text-amber-900 font-serif text-lg rounded-lg hover:bg-amber-900 hover:text-amber-50 transition-all duration-300">
+          <button 
+            className={`px-8 py-3 bg-transparent border-2 border-amber-900 text-amber-900 font-serif text-lg rounded-lg hover:bg-amber-900 hover:text-amber-50 transition-all duration-500 ${
+              fontLoaded ? 'opacity-100 delay-[850ms]' : 'opacity-0'
+            }`}
+          >
             Get in Touch
           </button>
         </div>
         
-        <div className="flex gap-8 justify-center text-amber-800">
+        <div 
+          className={`flex gap-8 justify-center text-amber-800 transition-opacity duration-500 delay-1000 ${
+            fontLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
           <a href="#" className="font-serif hover:text-amber-950 transition-colors duration-300 flex items-center gap-2">
             <span>GitHub</span>
           </a>
@@ -98,8 +163,12 @@ function LandingPage() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 animate-bounce">
-        <p className="text-amber-800 font-serif text-sm">Scroll to explore</p>
+      <div 
+        className={`absolute bottom-8 animate-bounce transition-opacity duration-500 delay-1000 ${
+          fontLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <p className="text-amber-800 font-serif text-sm cursor-default">Scroll to explore</p>
         <div className="w-6 h-10 border-2 border-amber-800 rounded-full mx-auto mt-2 flex justify-center">
           <div className="w-1 h-3 bg-amber-800 rounded-full mt-2 animate-pulse"></div>
         </div>
@@ -130,5 +199,7 @@ function NewspaperBackground({ children }) {
     </div>
   );
 }
+
+
 
 export default App;

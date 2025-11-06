@@ -3,16 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-   "homepage": "https://tzarish.github.io/Rish-Portfolio/",
+  "homepage": "https://tzarish.github.io/Rish-Portfolio/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "update": "git add . && git push origin main && npm run deploy",
+    "_comment": "git commit -m 'your commit message' before running the update script"
   },
   "dependencies": {
+    "gsap": "^3.13.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
