@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         chomsky: ["Chomsky", "sans-serif"],
+        'bigshot': ['"Bigshot One"', 'serif'],
       },
     },
   },

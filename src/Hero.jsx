@@ -1,17 +1,112 @@
 import { useState, useEffect } from 'react';
-import './App.css';
+import TargetCursor from './TargetCursor';
 
 function App() {
+  const [loadingComplete, setLoadingComplete] = useState(false);
+  const [nameTransitioned, setNameTransitioned] = useState(false);
+  const [fontLoaded, setFontLoaded] = useState(false);
+  const [cursorVisible, setCursorVisible] = useState(false);
+  const [displayedName, setDisplayedName] = useState('');
+
+  useEffect(() => {
+    const checkFont = async () => {
+      try {
+        await document.fonts.load('1em chomsky');
+        setTimeout(() => {
+          setFontLoaded(true);
+        }, 100);
+      } catch (error) {
+        console.error('Font loading error:', error);
+        setTimeout(() => {
+          setFontLoaded(true);
+        }, 200);
+      }
+    };
+
+    checkFont();
+  }, []);
+
+  useEffect(() => {
+    if (!fontLoaded) return;
+
+    const fullName = "Rishabh Rohira";
+    const typingSpeed = 100;
+    let currentIndex = 0;
+
+    const typeInterval = setInterval(() => {
+      if (currentIndex <= fullName.length) {
+        setDisplayedName(fullName.substring(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, typingSpeed);
+
+    const transitionTimer = setTimeout(() => {
+      setLoadingComplete(true);
+    }, 2500);
+
+    const contentTimer = setTimeout(() => {
+      setNameTransitioned(true);
+    }, 3500);
+
+    return () => {
+      clearInterval(typeInterval);
+      clearTimeout(transitionTimer);
+      clearTimeout(contentTimer);
+    };
+  }, [fontLoaded]);
+
+  useEffect(() => {
+    const handleMouseMove = () => {
+      setCursorVisible(true);
+    };
+
+    const handleMouseEnter = () => {
+      setCursorVisible(true);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { once: true });
+    window.addEventListener('mouseenter', handleMouseEnter, { once: true });
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseenter', handleMouseEnter);
+    };
+  }, []);
+
   return (
-    <NewspaperBackground>
-      <LandingPage />
-    </NewspaperBackground>
+    <>
+      <div style={{ opacity: cursorVisible ? 1 : 0, transition: 'opacity 0.2s' }}>
+        <TargetCursor 
+          spinDuration={3}
+          hideDefaultCursor={true}
+          parallaxOn={false}
+        />
+      </div>
+      
+      <div className={`fixed inset-0 bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 z-50 transition-all duration-1000 ${
+        loadingComplete ? 'opacity-0 pointer-events-none' : 'opacity-0'
+      }`} />
+      
+      <h1 className={`cursor-target fixed font-chomsky text-amber-950 z-40 left-1/2 -translate-x-1/2 text-6xl md:text-7xl lg:text-8xl transition-all duration-1000 ease-out ${
+        loadingComplete 
+          ? 'top-[15vh]' 
+          : 'top-1/2 -translate-y-1/2'
+      }`}>
+        {displayedName}
+        {!loadingComplete && displayedName.length < 15 && <span className="animate-blink">|</span>}
+      </h1>
+      
+      <NewspaperBackground>
+        <LandingPage isVisible={nameTransitioned} />
+      </NewspaperBackground>
+    </>
   );
 }
 
-function LandingPage() {
+function LandingPage({ isVisible }) {
   const [displayedText, setDisplayedText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
   
@@ -19,7 +114,7 @@ function LandingPage() {
     "Front-End Developer",
     "Valedictorian",
     "Student Leader",
-    "That Guy"
+    "That Guy",
   ];
   
   const typingSpeed = 50;
@@ -27,6 +122,8 @@ function LandingPage() {
   const pauseTime = 1500;
 
   useEffect(() => {
+    if (!isVisible) return;
+
     const handleTyping = () => {
       const current = loopNum % textArray.length;
       const fullText = textArray[current];
@@ -54,54 +151,62 @@ function LandingPage() {
     );
 
     return () => clearTimeout(timer);
-  }, [displayedText, isDeleting, loopNum]);
+  }, [displayedText, isDeleting, loopNum, isVisible]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center text-center pt-32">
       <div className="max-w-4xl mx-auto">
-        <h1 className="cursor-default text-6xl md:text-7xl lg:text-8xl font-chomsky text-amber-950 mb-6 animate-fadeIn">
-          Rishabh Rohira
-        </h1>
-
-        <div className="h-12 mb-8">
-          <p className="cursor-default text-2xl md:text-3xl font-serif text-amber-900">
+        <div className={`h-12 mb-8 transition-all duration-700 ease-out delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
+        }`}>
+          <p className="text-2xl md:text-3xl font-bigshot text-amber-900">
             {displayedText}
             <span className="animate-blink">|</span>
           </p>
         </div>
 
-        <p className="cursor-default text-lg md:text-xl text-amber-800 font-serif leading-relaxed mb-12 max-w-2xl mx-auto">
+        <p className={`text-lg md:text-xl text-amber-800 font-bigshot leading-relaxed mb-12 max-w-2xl mx-auto transition-all duration-700 ease-out delay-[400ms] ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
+        }`}>
           Welcome to my corner of the web. I build beautiful, functional experiences 
-          that blend creativity with code. Currently crafting digital solutions for
+          that blend creativity with code. I'm currently crafting digital solutions for
           my high school!
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center mb-12">
-          <button className="px-8 py-3 bg-amber-900 text-amber-50 font-serif text-lg rounded-lg hover:bg-amber-800 transition-all duration-300 shadow-lg hover:shadow-xl">
+          <button className={`cursor-target px-8 py-3 bg-amber-900 text-amber-50 font-bigshot text-lg rounded-lg border-2 border-amber-900 hover:bg-amber-50 hover:text-amber-900 hover:border-amber-900 transition-all duration-700 shadow-lg hover:shadow-xl ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
+          }`}>
             View Projects
           </button>
-          <button className="px-8 py-3 bg-transparent border-2 border-amber-900 text-amber-900 font-serif text-lg rounded-lg hover:bg-amber-900 hover:text-amber-50 transition-all duration-300">
+          <button className={`cursor-target px-8 py-3 bg-transparent border-2 border-amber-900 text-amber-900 font-bigshot text-lg rounded-lg hover:bg-amber-900 hover:text-amber-50 transition-all duration-700 ease-out ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
+          }`}>
             Get in Touch
           </button>
         </div>
         
-        <div className="flex gap-8 justify-center text-amber-800">
-          <a href="#" className="font-serif hover:text-amber-950 transition-colors duration-300 flex items-center gap-2">
+        <div className={`no-underline flex gap-8 justify-center transition-all duration-700 ease-out delay-[900ms] ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
+        }`}>
+          <a href="https://github.com/tzarish" target="_blank" rel="noopener noreferrer" className="cursor-target font-chomsky text-amber-800 hover:text-amber-950 transition-colors duration-300 flex items-center gap-2">
             <span>GitHub</span>
           </a>
-          <a href="#" className="font-serif hover:text-amber-950 transition-colors duration-300 flex items-center gap-2">
+          <a href="https://www.linkedin.com/in/rishabh-rohira-5a933b366" target="_blank" rel="noopener noreferrer" className="cursor-target font-chomsky text-amber-800 hover:text-amber-950 transition-colors duration-300 flex items-center gap-2">
             <span>LinkedIn</span>
           </a>
-          <a href="#" className="font-serif hover:text-amber-950 transition-colors duration-300 flex items-center gap-2">
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=rrohira93@gmail.com" target="_blank" rel="noopener noreferrer" className="cursor-target font-chomsky text-amber-800 hover:text-amber-950 transition-colors duration-300 flex items-center gap-2">
             <span>Email</span>
           </a>
         </div>
       </div>
 
-      <div className="absolute bottom-8 animate-bounce">
-        <p className="text-amber-800 font-serif text-sm">Scroll to explore</p>
+      <div className={`absolute bottom-8 left-100 right-10 transition-all duration-700 ease-out delay-[1100ms] ${
+        isVisible ? 'opacity-100 translate-y-0 animate-bounce' : 'opacity-0 translate-y-5'
+      }`}>
+        <p className="text-amber-800 font-bigshot">Scroll to explore</p>
         <div className="w-6 h-10 border-2 border-amber-800 rounded-full mx-auto mt-2 flex justify-center">
-          <div className="w-1 h-3 bg-amber-800 rounded-full mt-2 animate-pulse"></div>
+          <div className="w-1 h-3 bg-amber-800 rounded-full mt-2"></div>
         </div>
       </div>
     </div>
