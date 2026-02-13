@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        chomsky: ["Chomsky", "sans-serif"],
-        'bigshot': ['"Bigshot One"', 'serif'],
+        chomsky: ['chomsky', 'serif'],  // Changed from "Chomsky" to 'chomsky'
+        bigshot: ['"Bigshot One"', 'cursive'],
       },
     },
   },
