@@ -90,6 +90,8 @@ function App() {
       <div className={` inset-0 bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 z-50 transition-all duration-1000 ${loadingComplete ? 'opacity-0 pointer-events-none' : 'opacity-0'
         }`} />
 
+      <MastheadNav />
+
       <NewspaperBackground>
         <div className="flex flex-col items-center pt-[20vh] pb-0">
           <h1 className="cursor-target font-chomsky text-amber-950 z-40 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl whitespace-nowrap">
@@ -118,14 +120,121 @@ function App() {
 
         <PersonalitySection />
 
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="border-t border-amber-900/20" />
+        </div>
+
+        <ContactSection />
+
         <div className="max-w-5xl mx-auto px-4 pb-12 pt-4">
           <div className="border-t-2 border-amber-900/40 pt-4 flex justify-between items-center">
-            <span className="font-chomsky text-amber-800 text-lg">Rishabh Rohira</span>
+            <span className="font-chomsky text-amber-800 text-lg">Love Always, Rishabh Rohira</span>
             <span className="font-bigshot text-xs text-amber-600 tracking-widest">EST. 2024</span>
           </div>
         </div>
       </NewspaperBackground>
+
+      <BackToTopButton />
     </>
+  );
+}
+
+function MastheadNav() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled
+        ? 'bg-amber-50/95 backdrop-blur-sm shadow-sm'
+        : 'bg-amber-50/80 backdrop-blur-sm'
+    }`}>
+
+      <div className="h-0.5 bg-amber-900/70" />
+
+      <div className="max-w-5xl mx-auto px-6 py-2 flex items-center justify-between">
+
+        <div className="hidden sm:flex items-center gap-6">
+          {[
+            { label: 'Projects', id: 'projects' },
+            { label: 'Skills',   id: 'skills'   },
+            { label: 'About',    id: 'about'    },
+            { label: 'Contact',  id: 'contact'  },
+          ].map(({ label, id }) => (
+            <button
+              key={id}
+              onClick={() => scrollToSection(id)}
+              className="cursor-target font-bigshot text-[11px] tracking-widest uppercase text-white hover:text-amber-500 transition-colors duration-200 relative group"
+            >
+              {label}
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-amber-900 group-hover:w-full transition-all duration-200" />
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-4">
+          {[
+            { label: 'GitHub',   href: 'https://github.com/tzarish' },
+            { label: 'LinkedIn', href: 'https://www.linkedin.com/in/rishabh-rohira-5a933b366' },
+            { label: 'Email',    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=rrohira93@gmail.com' },
+          ].map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-target font-bigshot text-[11px] tracking-widest uppercase text-amber-700 hover:text-amber-950 transition-colors duration-200 relative group"
+            >
+              {label}
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-amber-900 group-hover:w-full transition-all duration-200" />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div className="h-px bg-amber-900/25" />
+    </nav>
+  );
+}
+
+{/*back to top button*/ }
+function BackToTopButton() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setVisible(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <button
+      onClick={scrollToTop}
+      aria-label="Back to top"
+      className={`fixed bottom-8 left-8 z-50 flex flex-col items-center gap-1 font-bigshot text-[10px] text-white uppercase transition-all duration-500 animate-bounce ${
+        visible ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
+      }`}
+    >
+      <div className="w-6 h-10 border-2 border-amber-800 rounded-full flex justify-center relative">
+        <div className="w-1 h-3 bg-amber-800 rounded-full mt-2" style={{ animationDirection: 'normal' }} />
+      </div>
+      <span>Back to top</span>
+    </button>
   );
 }
 
@@ -135,6 +244,7 @@ function LandingPage({ isVisible }) {
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
+  const [atTop, setAtTop] = useState(true);
 
   const textArray = [
     "Front-End Developer",
@@ -179,8 +289,16 @@ function LandingPage({ isVisible }) {
     return () => clearTimeout(timer);
   }, [displayedText, isDeleting, loopNum, isVisible]);
 
+  useEffect(() => {
+    const onScroll = () => {
+      setAtTop(window.scrollY < 50);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center text-center px-4 relative">
       <div className="max-w-4xl mx-auto w-full">
         <div className={`h-12 mb-8 transition-all duration-700 ease-out delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
           }`}>
@@ -193,8 +311,7 @@ function LandingPage({ isVisible }) {
         <p className={`text-base sm:text-lg md:text-xl text-amber-800 font-bigshot leading-relaxed mb-12 max-w-2xl mx-auto transition-all duration-700 ease-out delay-[400ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
           }`}>
           Welcome to my corner of the web. I build beautiful, functional experiences
-          that blend creativity with code. I'm currently crafting digital solutions for
-          my high school!
+          that blend creativity with code. I design interfaces that increase user accessibility by at least 40%.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center mb-12">
@@ -205,8 +322,6 @@ function LandingPage({ isVisible }) {
             View Projects
           </button>
         </div>
-
-        {/* CONTACT LINKS
 
         <div className={`no-underline flex flex-wrap gap-6 sm:gap-8 justify-center transition-all duration-700 ease-out delay-[900ms] ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
@@ -221,13 +336,13 @@ function LandingPage({ isVisible }) {
             <span>Email</span>
           </a>
         </div>
-        */}
       </div>
 
-      <div className={`absolute bottom-8 right-20 transition-all duration-700 ease-out delay-[1100ms] ${isVisible ? 'opacity-100 translate-y-0 animate-bounce' : 'opacity-0 translate-y-5'
-        }`}>
+      <div className={`fixed bottom-8 right-20 z-40 flex flex-col items-center gap-2 transition-all duration-500 animate-bounce ${
+        isVisible && atTop ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3 pointer-events-none'
+      }`}>
         <p className="text-amber-800 font-bigshot text-sm sm:text-base">Scroll to explore</p>
-        <div className="w-6 h-10 border-2 border-amber-800 rounded-full mx-auto mt-2 flex justify-center">
+        <div className="w-6 h-10 border-2 border-amber-800 rounded-full mx-auto flex justify-center">
           <div className="w-1 h-3 bg-amber-800 rounded-full mt-2"></div>
         </div>
       </div>
@@ -277,47 +392,56 @@ function NewspaperBackground({ children }) {
 const PROJECTS = [
   {
     issue: "VOL. I — NO. 1",
-    date: "AUTUMN 2024",
+    date: "SPRING 2025",
     kicker: "SPECIAL REPORT",
-    headline: "Local Student Builds School Portal That Actually Works",
-    deck: "An internal dashboard replaces three legacy spreadsheets and saves administrators 6 hours a week.",
-    tag: "React · Node.js · PostgreSQL",
-    href: "#",
+    headline: "Local Student Rebuilding School Website That Actually Works",
+    deck: "A deep dive into the tech stack and design choices behind the project that's saving the day for the school's digital presence.",
+    tag: "Peer Reviewed · Vanilla · Figma",
+    href: "https://decax-studios.github.io/CTE-Website/",
   },
   {
     issue: "VOL. I — NO. 2",
-    date: "WINTER 2024",
+    date: "FALL 2025",
     kicker: "TECHNOLOGY",
-    headline: "AI-Powered Study Tool Cuts Flashcard Prep Time in Half",
-    deck: "Using the OpenAI API, the app generates custom quizzes from any pasted notes in seconds.",
-    tag: "Python · FastAPI · OpenAI",
-    href: "#",
+    headline: "Collaborative Mock Japanese Restaurant Website with Advanced Features",
+    deck: "A team effort to build a responsive, accessible, and visually stunning mock restaurant website using modern web technologies.",
+    tag: "Parallax Scrolling · Accessible Carousel · Vanilla",
+    href: "https://tzarish.github.io/Fuji-Kitchen/",
   },
   {
     issue: "VOL. I — NO. 3",
-    date: "SPRING 2025",
+    date: "FALL 2025",
     kicker: "DESIGN",
-    headline: "A Portfolio So Newspaper It Hurts — In the Best Way",
-    deck: "Vintage broadsheet aesthetics meet modern animation on a personal site that refuses to be boring.",
-    tag: "React · Tailwind · Vite",
-    href: "#",
+    headline: "A Clothing Brand So Niche That It Only Exists on the Internet",
+    deck: "Award-winning design project that combines streetwear aesthetics with cutting-edge web design to create a unique online shopping experience.",
+    tag: "Vanilla · Bootstrap · Collaborative",
+    href: "https://tzarish.github.io/Urban-Pulse-Streetwear/",
   },
+  {
+    issue: "VOL. I — NO. 4",
+    date: "WINTER 2025",
+    kicker: "OPINION",
+    headline: "Jamstack: You're Worth Serving For",
+    deck: "A music player website dedicated towards exploring backend code with a focus on performance, scalability, and developer experience.",
+    tag: "Web Dev · Performance · Trending Music",
+    href: "https://tzarish.github.io/Jamstack/",
+  }
 ];
 
 function ProjectsSection() {
   return (
-    <section className="max-w-5xl mx-auto px-4 py-20">
+    <section id="projects" className="max-w-5xl mx-auto px-4 py-20">
       <div className="border-t-4 border-b border-amber-900 mb-1 pt-2 pb-1 flex items-baseline justify-between">
         <span className="font-bigshot text-3xl sm:text-4xl text-amber-950">The Works</span>
         <span className="font-bigshot text-xs text-amber-700 tracking-widest uppercase">Projects Edition</span>
       </div>
       <div className="border-t border-amber-900 mb-10" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 divide-x divide-amber-900/20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
         {PROJECTS.map((p, i) => (
           <div
             key={i}
-            className="cursor-target group px-5 first:pl-0 last:pr-0"
+            className={`cursor-target group px-5 ${i % 3 === 0 ? 'pl-0' : ''} ${i % 3 === 2 ? 'pr-0' : ''} ${(i + 1) % 3 !== 0 && i !== PROJECTS.length - 1 ? 'md:border-r border-amber-900/20' : ''}`}
             onClick={() => window.open(p.href, '_blank')}
             style={{ cursor: 'pointer' }}
           >
@@ -357,7 +481,7 @@ const SKILLS = {
 
 function EditorialSection() {
   return (
-    <section className="max-w-5xl mx-auto px-4 py-16">
+    <section id="skills" className="max-w-5xl mx-auto px-4 py-16">
       <div className="border-t-4 border-b border-amber-900 mb-1 pt-2 pb-1 flex items-baseline justify-between">
         <span className="font-bigshot text-3xl sm:text-4xl text-amber-950">The Skill Index</span>
         <span className="font-bigshot text-xs text-amber-700 tracking-widest uppercase">Editorial</span>
@@ -391,7 +515,7 @@ const OPINIONS = [
 
 function PersonalitySection() {
   return (
-    <section className="max-w-5xl mx-auto px-4 py-16">
+    <section id="about" className="max-w-5xl mx-auto px-4 py-16">
       <div className="border-t-4 border-b border-amber-900 mb-1 pt-2 pb-1 flex items-baseline justify-between">
         <span className="font-bigshot text-3xl sm:text-4xl text-amber-950">Op-Ed</span>
         <span className="font-bigshot text-xs text-amber-700 tracking-widest uppercase">The Human Behind the Code</span>
@@ -401,14 +525,15 @@ function PersonalitySection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div>
           <p className="font-bigshot text-base text-amber-800 leading-relaxed mb-4">
-            I'm Rishabh. I believe technology is most powerful when it
-            feels invisible. The best interface is the one you forget you're using.
-            I would never get into predatory JavaScript frameworks, but I do have a soft spot for a well-placed hover effect or a perfectly timed animation.
-            If you like what you see, feel free to reach out. I'm always excited to collaborate on a project, swap design tips, or just chat about the latest tech trends.
+            I believe technology is most powerful when it
+            feels invisible.
+            Outside the editor, I'm attending internships or strumming my guitar.
+            I'm always down to chat about new ideas or opportunities.
+            
           </p>
           <p className="font-bigshot text-base text-amber-800 leading-relaxed">
-            Outside the editor, I'm probably convincing someone that serif fonts are underrated, trying to pet a dog, or strumming my guitar.
-            I love collaborating on projects that blend creativity with code, and I'm always down to chat about new ideas or opportunities.
+            I'm actually getting into electrical engineering and how it can be integrated with software,
+            so if you have any insight or tips, please do reach out!
           </p>
         </div>
 
@@ -418,6 +543,73 @@ function PersonalitySection() {
               <p className="font-bigshot text-xl text-amber-950 leading-snug mb-1">"{pull}"</p>
               <cite className="font-bigshot text-xs text-amber-600 not-italic tracking-widest uppercase">{attr}</cite>
             </blockquote>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+{/* contact */}
+function ContactSection() {
+  const contacts = [
+    {
+      label: 'GitHub',
+      description: 'See the code behind the curtain',
+      href: 'https://github.com/tzarish',
+      kicker: 'SOURCE',
+    },
+    {
+      label: 'LinkedIn',
+      description: 'Connect professionally',
+      href: 'https://www.linkedin.com/in/rishabh-rohira-5a933b366',
+      kicker: 'NETWORK',
+    },
+    {
+      label: 'Email',
+      description: 'rrohira93@gmail.com',
+      href: 'https://mail.google.com/mail/?view=cm&fs=1&to=rrohira93@gmail.com',
+      kicker: 'DIRECT',
+    },
+  ];
+
+  return (
+    <section id="contact" className="max-w-5xl mx-auto px-4 py-16">
+      <div className="border-t-4 border-b border-amber-900 mb-1 pt-2 pb-1 flex items-baseline justify-between">
+        <span className="font-bigshot text-3xl sm:text-4xl text-amber-950">Letters to the Editor</span>
+        <span className="font-bigshot text-xs text-amber-700 tracking-widest uppercase">Get in Touch</span>
+      </div>
+      <div className="border-t border-amber-900 mb-10" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+        <div>
+          <p className="font-bigshot text-base text-amber-800 leading-relaxed mb-2">
+            Want to collaborate, ask a question, or just say hello?
+            I read every message and respond within a day. Seriously, try me.
+          </p>
+          <p className="font-bigshot text-sm text-amber-600 leading-relaxed">
+            Whether it's a quick question or a big idea, my inbox is always open.
+          </p>
+        </div>
+
+        <div className="divide-y divide-amber-900/15">
+          {contacts.map(({ label, description, href, kicker }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-target group flex items-start justify-between py-4 first:pt-0 last:pb-0 hover:pl-1 transition-all duration-200"
+            >
+              <div>
+                <span className="font-bigshot text-[10px] tracking-[0.2em] uppercase text-amber-500 block mb-0.5">{kicker}</span>
+                <span className="font-bigshot text-lg text-amber-950 group-hover:underline decoration-amber-800 underline-offset-2">
+                  {label}
+                </span>
+                <span className="font-bigshot text-xs text-amber-600 block mt-0.5">{description}</span>
+              </div>
+              <span className="font-chomsky text-amber-400 group-hover:text-amber-800 text-xl mt-1 transition-colors duration-200">›</span>
+            </a>
           ))}
         </div>
       </div>
