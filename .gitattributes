@@ -1,0 +1,7 @@
+# Normalise line endings: LF in the repository, native in the working tree.
+# Prevents Windows checkouts (and GitHub web-UI uploads) from rewriting
+# whole files as CRLF and drowning real changes in diff noise.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
