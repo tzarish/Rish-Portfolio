@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import TargetCursor from './TargetCursor';
 import './App.css';
 
-{/*the styling and effects that the user sees first*/ }
+{}
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [nameTransitioned, setNameTransitioned] = useState(false);
@@ -245,7 +245,7 @@ function BackToTopButton() {
   );
 }
 
-{/*content the user sees first*/ }
+{}
 
 function LandingPage({ isVisible }) {
   const [displayedText, setDisplayedText] = useState('');
@@ -255,9 +255,9 @@ function LandingPage({ isVisible }) {
 
   const textArray = [
     "Front-End Developer",
-    "Valedictorian",
+    "High School Valedictorian",
     "Student Leader",
-    "That Guy",
+    "Computer Engineering Student"
   ];
 
   const typingSpeed = 50;
@@ -317,8 +317,8 @@ function LandingPage({ isVisible }) {
 
         <p className={`text-base sm:text-lg md:text-xl text-amber-800 font-bigshot leading-relaxed mb-12 max-w-2xl mx-auto transition-all duration-700 ease-out delay-[400ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
           }`}>
-          Welcome to my corner of the web. I build beautiful, functional experiences
-          that blend creativity with code. I design interfaces that increase user accessibility by at least 40%.
+          Welcome to my corner of the web.
+          Practice makes permanent, and permanent makes impact.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center mb-12">
@@ -444,17 +444,17 @@ const PROJECTS = [
   }
 ];
 
-{/*developing story — lead feature*/ }
+{}
 
 const DEVELOPING_STORY = {
   issue: "VOL. I — SPECIAL EDITION",
   date: "SPRING 2026 — ONGOING",
   kicker: "INVESTIGATIVE · DATA",
   headline: "The Ultimate Hub for the Repairability of your Devices",
-  deck: "What began as a repairability lookup is growing into something larger: a single, clean, public archive of EPREL device data — current and historical — built for the people who need receipts.",
+  deck: "What began as a repairability lookup is growing into something larger: a single, clean, public archive of EPREL device data built for the people who need receipts.",
   body: [
     "The European Product Registry for Energy Labelling holds a record of nearly every device sold into the EU market. It is public, but it is not accessible: entries are revised, superseded, and quietly withdrawn, and nothing preserves what a manufacturer claimed last year against what it claims today.",
-    "The core of the project is an archive that remembers. By capturing historical EPREL records alongside live ones, scattered regulatory filings become a queryable history — the kind of dataset a journalist, researcher, or activist can point at and say: this changed, and here is when.",
+    "The core of the project is an archive that remembers. By capturing historical EPREL records alongside live ones, scattered regulatory filings become a queryable history. The kind of dataset a journalist, researcher, or activist can point at and say: 'this changed, and here is when.'",
     "Repairability stays the way in. It is the practical hook for anyone deciding whether a device is worth fixing. But the deeper value is the paper trail, and the more history retained, the harder it becomes for a claim to quietly disappear.",
   ],
   status: "STORY DEVELOPING — ARCHITECTURE AND DATA SOURCING IN PROGRESS",
@@ -605,7 +605,7 @@ function EditorialSection() {
 
 
 const OPINIONS = [
-  { pull: "Clean code is a love letter to your future self.", attr: "— On craft" },
+  { pull: "The product sells the feature. The documentation sells the story.", attr: "— On craft" },
   { pull: "Design is communication.", attr: "— On aesthetics" },
   { pull: "Ship it, then make it perfect.", attr: "— On momentum" },
 ];
@@ -623,13 +623,13 @@ function PersonalitySection() {
         <div>
           <p className="font-bigshot text-base text-amber-800 leading-relaxed mb-4">
             I believe technology is most powerful when it
-            feels invisible.
+            feels invisible. You feel it when it's gone.
             Outside the editor, I'm attending internships or strumming my guitar.
             I'm always down to chat about new ideas or opportunities.
             
           </p>
           <p className="font-bigshot text-base text-amber-800 leading-relaxed">
-            I'm actually getting into electrical engineering and how it can be integrated with software,
+            I'm getting into electrical and computer engineering,
             so if you have any insight or tips, please do reach out!
           </p>
         </div>
@@ -647,7 +647,7 @@ function PersonalitySection() {
   );
 }
 
-{/* contact */}
+{}
 function ContactSection() {
   const contacts = [
     {
