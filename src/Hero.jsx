@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import TargetCursor from './TargetCursor';
 import './App.css';
 
-{/*the styling and effects that the user sees first*/ }
+{}
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [nameTransitioned, setNameTransitioned] = useState(false);
@@ -104,6 +104,12 @@ function App() {
 
         <LandingPage isVisible={nameTransitioned} />
 
+        <DevelopingStorySection />
+
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="border-t border-amber-900/20" />
+        </div>
+
         <div id="projects">
           <ProjectsSection />
         </div>
@@ -165,6 +171,7 @@ function MastheadNav() {
 
         <div className="hidden sm:flex items-center gap-6">
           {[
+            { label: 'Developing', id: 'developing' },
             { label: 'Projects', id: 'projects' },
             { label: 'Skills',   id: 'skills'   },
             { label: 'About',    id: 'about'    },
@@ -238,7 +245,7 @@ function BackToTopButton() {
   );
 }
 
-{/*content the user sees first*/ }
+{}
 
 function LandingPage({ isVisible }) {
   const [displayedText, setDisplayedText] = useState('');
@@ -248,9 +255,9 @@ function LandingPage({ isVisible }) {
 
   const textArray = [
     "Front-End Developer",
-    "Valedictorian",
+    "High School Valedictorian",
     "Student Leader",
-    "That Guy",
+    "Computer Engineering Student"
   ];
 
   const typingSpeed = 50;
@@ -310,8 +317,8 @@ function LandingPage({ isVisible }) {
 
         <p className={`text-base sm:text-lg md:text-xl text-amber-800 font-bigshot leading-relaxed mb-12 max-w-2xl mx-auto transition-all duration-700 ease-out delay-[400ms] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'
           }`}>
-          Welcome to my corner of the web. I build beautiful, functional experiences
-          that blend creativity with code. I design interfaces that increase user accessibility by at least 40%.
+          Welcome to my corner of the web.
+          Practice makes permanent, and permanent makes impact.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center mb-12">
@@ -428,15 +435,6 @@ const PROJECTS = [
   },
   {
     issue: "VOL. I — NO. 5",
-    date: "SPRING 2026",
-    kicker: "EXPERIMENTAL",
-    headline: "The Ultimate Hub for the Repairability of your Devices",
-    deck: "A one-stop platform that aggregates repair guides, parts, and community support to help users extend the life of their devices and reduce electronic waste.",
-    tag: "Community · Sustainability · Collaborative",
-    href: "https://planned-modernity-2.vercel.app/",
-  },
-  {
-    issue: "VOL. I — NO. 6",
     date: "FALL 2026",
     kicker: "GAMING",
     headline: "A Simulated Reality Experience That Shows Alternate Futures Based on Your Choices",
@@ -445,6 +443,87 @@ const PROJECTS = [
     href: "https://tzarish.github.io/Life-Simulator-Decision-Maker/",
   }
 ];
+
+{}
+
+const DEVELOPING_STORY = {
+  issue: "VOL. I — SPECIAL EDITION",
+  date: "SPRING 2026 — ONGOING",
+  kicker: "INVESTIGATIVE · DATA",
+  headline: "The Ultimate Hub for the Repairability of your Devices",
+  deck: "What began as a repairability lookup is growing into something larger: a single, clean, public archive of EPREL device data built for the people who need receipts.",
+  body: [
+    "The European Product Registry for Energy Labelling holds a record of nearly every device sold into the EU market. It is public, but it is not accessible: entries are revised, superseded, and quietly withdrawn, and nothing preserves what a manufacturer claimed last year against what it claims today.",
+    "The core of the project is an archive that remembers. By capturing historical EPREL records alongside live ones, scattered regulatory filings become a queryable history. The kind of dataset a journalist, researcher, or activist can point at and say: 'this changed, and here is when.'",
+    "Repairability stays the way in. It is the practical hook for anyone deciding whether a device is worth fixing. But the deeper value is the paper trail, and the more history retained, the harder it becomes for a claim to quietly disappear.",
+  ],
+  status: "STORY DEVELOPING — ARCHITECTURE AND DATA SOURCING IN PROGRESS",
+  tags: ["EPREL Data", "Public Archive", "Right to Repair", "Open Access", "Non-Commercial"],
+  href: "https://planned-modernity-2.vercel.app/",
+};
+
+function DevelopingStorySection() {
+  const d = DEVELOPING_STORY;
+  return (
+    <section id="developing" className="max-w-5xl mx-auto px-4 py-20">
+      <div className="border-t-4 border-b border-amber-900 mb-1 pt-2 pb-1 flex items-baseline justify-between">
+        <span className="font-bigshot text-3xl sm:text-4xl text-amber-950">Developing Story</span>
+        <span className="font-bigshot text-xs text-amber-700 tracking-widest uppercase">Ongoing Coverage</span>
+      </div>
+      <div className="border-t border-amber-900 mb-8" />
+
+      <article
+        className="cursor-target group"
+        onClick={() => window.open(d.href, '_blank')}
+        style={{ cursor: 'pointer' }}
+      >
+        <div className="flex items-center justify-between mb-3">
+          <span className="font-bigshot text-[10px] tracking-[0.2em] uppercase text-amber-700">{d.kicker}</span>
+          <span className="font-bigshot text-[10px] text-amber-500">{d.issue}</span>
+        </div>
+
+        <h2 className="font-bigshot text-3xl sm:text-4xl md:text-5xl text-amber-950 leading-tight mb-4 group-hover:underline decoration-amber-800 underline-offset-2 transition-all">
+          {d.headline}
+        </h2>
+
+        <div className="w-full h-px bg-amber-900/30 mb-4" />
+
+        <p className="font-bigshot text-base sm:text-lg text-amber-800 leading-snug mb-6 max-w-3xl">
+          {d.deck}
+        </p>
+
+        <div className="md:columns-2 gap-8 mb-6">
+          {d.body.map((para, i) => (
+            <p key={i} className="font-bigshot text-sm text-amber-800 leading-relaxed mb-4 break-inside-avoid">
+              {para}
+            </p>
+          ))}
+        </div>
+
+        <div className="border-t border-b border-amber-900/30 py-2 mb-6 flex flex-wrap items-center justify-between gap-2">
+          <span className="font-bigshot text-[10px] tracking-[0.2em] uppercase text-amber-700">{d.status}</span>
+          <span className="font-bigshot text-[10px] text-amber-500 tracking-widest">{d.date}</span>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          {d.tags.map((t) => (
+            <span
+              key={t}
+              className="inline-block font-bigshot text-[11px] border border-amber-800 text-amber-800 px-2 py-0.5 rounded tracking-wide group-hover:bg-amber-900 group-hover:text-amber-50 transition-colors"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        <span className="font-bigshot text-[11px] text-amber-700 tracking-widest uppercase group-hover:text-amber-950 transition-colors">
+          Read the current build &rarr;
+        </span>
+      </article>
+    </section>
+  );
+}
+
 
 function ProjectsSection() {
   return (
@@ -526,7 +605,7 @@ function EditorialSection() {
 
 
 const OPINIONS = [
-  { pull: "Clean code is a love letter to your future self.", attr: "— On craft" },
+  { pull: "The product sells the feature. The documentation sells the story.", attr: "— On craft" },
   { pull: "Design is communication.", attr: "— On aesthetics" },
   { pull: "Ship it, then make it perfect.", attr: "— On momentum" },
 ];
@@ -544,13 +623,13 @@ function PersonalitySection() {
         <div>
           <p className="font-bigshot text-base text-amber-800 leading-relaxed mb-4">
             I believe technology is most powerful when it
-            feels invisible.
+            feels invisible. You feel it when it's gone.
             Outside the editor, I'm attending internships or strumming my guitar.
             I'm always down to chat about new ideas or opportunities.
             
           </p>
           <p className="font-bigshot text-base text-amber-800 leading-relaxed">
-            I'm actually getting into electrical engineering and how it can be integrated with software,
+            I'm getting into electrical and computer engineering,
             so if you have any insight or tips, please do reach out!
           </p>
         </div>
@@ -568,7 +647,7 @@ function PersonalitySection() {
   );
 }
 
-{/* contact */}
+{}
 function ContactSection() {
   const contacts = [
     {
